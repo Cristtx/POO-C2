@@ -1,5 +1,6 @@
 package pe.edu.upeu.asistencia.control;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,32 +18,40 @@ import pe.edu.upeu.asistencia.servicio.ParticipanteServicioI;
 public class ParticipanteController {
 
     @FXML
-    private ComboBox<Carrera> cdxCarrera;
-    @FXML
-    private ComboBox<TipoParticipante> cdxTipoParticipante;
+    private ComboBox<Carrera> cbxCarrera;
 
     @FXML
-    private TableView<Participante>tableRegPart;
-    ObservableList<Participante>participantes;
+    private ComboBox<TipoParticipante> cbxTipoParticipante;
+
+    @FXML
+    private TableView<Participante> tableRegPart;
+    ObservableList<Participante> participantes;
+
     @Autowired
     ParticipanteServicioI ps;
 
     @FXML
-    public void initialize() {
-        cdxCarrera.getItems().addAll(Carrera.values());
-        cdxTipoParticipante.getItems().addAll(TipoParticipante.values());
+    public void initialize(){
+        cbxCarrera.getItems().addAll(Carrera.values());
+        cbxTipoParticipante.getItems().addAll(TipoParticipante.values());
 
-        cdxCarrera.getSelectionModel().select(4);
-        Carrera carrera = cdxCarrera.getSelectionModel().getSelectedItem();
+        cbxCarrera.getSelectionModel().select(4);
+        Carrera carrera = cbxCarrera.getSelectionModel().getSelectedItem();
         System.out.println(carrera.name());
-
+        listarPartipantes();
     }
-    public void listarParticipantes() {
-        TableColumn<Participante,String>dniCol=new TableColumn("DNI");
+
+    public void listarPartipantes(){
+        TableColumn<Participante, String> dniCol = new TableColumn<>("DNI");
         dniCol.setCellValueFactory(cellData -> cellData.getValue().getDni());
+
+        TableColumn<Participante, String> nombreCol = new TableColumn<>("Nombre");
+        nombreCol.setCellValueFactory(cellData -> cellData.getValue().getNombre());
 
         participantes = FXCollections.observableList(ps.findAll());
         tableRegPart.getColumns().addAll(dniCol, nombreCol);
         tableRegPart.setItems(participantes);
-  }
+    }
+
+
 }
